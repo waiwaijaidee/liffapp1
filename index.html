@@ -17,6 +17,7 @@
   <p id="displayName"><b>displayName:</b> </p>
   <p id="statusMessage"><b>statusMessage:</b> </p>
   <p id="decodedIDToken"><b>email:</b> </p>
+  <p id="emailX"><b>email:</b> </p>
   <p id="type"><b>type:</b> </p>
   <p id="viewType"><b>viewType:</b> </p>
   <p id="utouId"><b>utouId:</b> </p>
@@ -77,11 +78,16 @@
     }
 
     async function getUserProfile() {
-      const profile = await liff.getProfile()
-      document.getElementById("pictureUrl").src = profile.pictureUrl
-      document.getElementById("userId").append(profiel.userId)
-      document.getElementById("statusMessage").append(profile.statusMessage)
-      document.getElementById("displayName").append(profile.displayName)
+      const profile = await liff.getProfile().then(profile =>{
+        document.getElementById("pictureUrl").src = profile.pictureUrl
+        document.getElementById("userId").append(profile.userId)
+        document.getElementById("statusMessage").append(profile.statusMessage)
+        document.getElementById("displayName").append(profile.displayName)
+        const email = liff.getDecodedIDToken().email;
+        document.getElementById("emailX").append(email)
+        
+        
+      })
     } 
 
     function getEnvironment() {
@@ -91,6 +97,7 @@
       document.getElementById("language").append(liff.getLanguage())
       document.getElementById("accessToken").append(liff.getAccessToken())
       document.getElementById("isInClient").append(liff.isInClient())
+
       if (liff.isInClient()){
         document.getElementById("btnLogOut").style.display = "none"      
       }else{
@@ -101,12 +108,21 @@
     }
 
     async function main() {
-          await liff.init({ liffId: "1661289057-DGOMOeoq" })
-      getEnvironment()
-      getUserProfile()
-      getContext()
-      // getFriendship()
-      // createUniversalLink()
+          await liff.init({ liffId: "2005532699-mVO8vb2D" 
+
+          }).then(()=>{
+            if(liff.isLoggedIn()){
+              getEnvironment()
+              getUserProfile()
+              getContext()
+              // getFriendship()
+              // createUniversalLink()
+            }else{
+              liff.login()
+            }
+          })
+          // liff.logIn()
+      
     }
     main()
   </script>
